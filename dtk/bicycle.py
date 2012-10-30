@@ -2,6 +2,7 @@ from math import sin, cos, tan, atan, pi
 from scipy.optimize import newton
 import numpy as np
 from matplotlib.pyplot import figure, rcParams
+from numpy import sqrt
 
 from inertia import y_rot
 
@@ -217,6 +218,71 @@ def front_contact(q1, q2, q3, q4, q7, d1, d2, d3, rr, rf, guess=None):
         pow((sin(q4) * sin(q7) - sin(q5) * cos(q4) * cos(q7)), 2)), 0.5)))
 
     return q9, q10
+
+def front_wheel_rate(q2, q3, q4, u1, u2, u3, u5, rf, rr, d1, d2, d3):
+    """Returns the angular velocity of the front wheel.
+
+    Parameters
+    ----------
+    q2 : float
+        The roll angle.
+    q3 : float
+        The pitch angle.
+    q4 : float
+        The steer angle of the handlebar.
+    u1 : float
+        The yaw rate.
+    u2 : float
+        The roll rate.
+    u3 : float
+        The pitch rate.
+    u5 : float
+        The rear wheel rate.
+    rr : float
+        The radius of the rear wheel.
+    rf : float
+        The radius of the front wheel.
+    d1 : float
+        The distance from the rear wheel center to the steer axis.
+    d2 : float
+        The distance between the front and rear wheel centers along the steer
+        axis.
+    d3 : float
+        The distance from the front wheel center to the steer axis.
+
+    Returns
+    -------
+    u6 : float
+        The front wheel rate in E['2'].
+
+    """
+
+    u6 = (d1*(u1*sin(q2) + u3)*((-sin(q2)*sin(q3)*sin(q4) +
+        cos(q2)*cos(q4))*sin(q3)/sqrt((-sin(q2)*sin(q3)*sin(q4) +
+        cos(q2)*cos(q4))**2 + sin(q4)**2*cos(q3)**2) -
+        sin(q2)*sin(q4)*cos(q3)**2/sqrt((-sin(q2)*sin(q3)*sin(q4) +
+        cos(q2)*cos(q4))**2 + sin(q4)**2*cos(q3)**2)) - d2*(u1*sin(q2) +
+        u3)*((-sin(q2)*sin(q3)*sin(q4) +
+        cos(q2)*cos(q4))*cos(q3)/sqrt((-sin(q2)*sin(q3)*sin(q4) +
+        cos(q2)*cos(q4))**2 + sin(q4)**2*cos(q3)**2) +
+        sin(q2)*sin(q3)*sin(q4)*cos(q3)/sqrt((-sin(q2)*sin(q3)*sin(q4) +
+        cos(q2)*cos(q4))**2 + sin(q4)**2*cos(q3)**2)) +
+        d3*((-sin(q2)*sin(q3)*sin(q4) +
+        cos(q2)*cos(q4))*sin(q3)/sqrt((-sin(q2)*sin(q3)*sin(q4) +
+        cos(q2)*cos(q4))**2 + sin(q4)**2*cos(q3)**2) -
+        sin(q2)*sin(q4)*cos(q3)**2/sqrt((-sin(q2)*sin(q3)*sin(q4) +
+        cos(q2)*cos(q4))**2 + sin(q4)**2*cos(q3)**2))*((sin(q2)*cos(q4) +
+        sin(q3)*sin(q4)*cos(q2))*u1 - u2*sin(q4)*cos(q3) + u3*cos(q4)) +
+        rr*(-sin(q2)*sin(q3)*sin(q4) + cos(q2)*cos(q4))*(u1*sin(q2) + u3
+        + u5)/sqrt((-sin(q2)*sin(q3)*sin(q4) + cos(q2)*cos(q4))**2 +
+        sin(q4)**2*cos(q3)**2) -
+        rr*u2*sin(q4)*cos(q2)*cos(q3)/sqrt((-sin(q2)*sin(q3)*sin(q4) +
+        cos(q2)*cos(q4))**2 + sin(q4)**2*cos(q3)**2) -
+        (d1*(u1*cos(q2)*cos(q3) + u2*sin(q3)) - d2*(-u1*sin(q3)*cos(q2) +
+        u2*cos(q3)))*sin(q4)*cos(q2)*cos(q3)/sqrt((-sin(q2)*sin(q3)*sin(q4) +
+         cos(q2)*cos(q4))**2 + sin(q4)**2*cos(q3)**2))/rf
+
+    return u6
 
 def meijaard_figure_four(time, rollRate, steerRate, speed):
     width = 4.0 # inches
