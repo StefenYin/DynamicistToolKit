@@ -1,4 +1,4 @@
-from math import sin, cos, tan, atan, pi
+from math import sin, cos, tan, atan, pi, acos
 from scipy.optimize import newton
 import numpy as np
 from matplotlib.pyplot import figure, rcParams
@@ -283,6 +283,36 @@ def front_wheel_rate(q2, q3, q4, u1, u2, u3, u5, rf, rr, d1, d2, d3):
          cos(q2)*cos(q4))**2 + sin(q4)**2*cos(q3)**2))/rf
 
     return u6
+
+def front_wheel_steer_yaw_angle(q1, q2, q3, q4):
+    """Returns the yaw angle of the front wheel.
+
+    Parameters
+    ----------
+    q1 : float
+        The yaw angle.
+    q2 : float
+        The roll angle.
+    q3 : float
+        The pitch angle.
+    q4 : float
+        The steer angle.
+
+    Returns
+    -------
+    q4_front_wheel : float
+        The steer angle of the front wheel, different from handlebar one.
+    q1_front_wheel : float
+        The yaw angle of the front wheel, different from rear wheel one.
+
+    """
+    q4_front_wheel = atan(sin(q4) * cos(q3) / (cos(q2) * cos(q4) - 
+                    sin(q2) * sin(q4) * sin(q3)))
+
+    q1_front_wheel = q1 + q4_front_wheel
+
+    return q4_front_wheel, q1_front_wheel
+
 
 def meijaard_figure_four(time, rollRate, steerRate, speed):
     width = 4.0 # inches
