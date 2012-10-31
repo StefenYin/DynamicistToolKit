@@ -1,4 +1,4 @@
-from math import sin, cos, tan, atan, pi, acos
+from numpy import sin, cos, tan, arctan, pi
 from scipy.optimize import newton
 import numpy as np
 from matplotlib.pyplot import figure, rcParams
@@ -306,12 +306,71 @@ def front_wheel_steer_yaw_angle(q1, q2, q3, q4):
         The yaw angle of the front wheel, different from rear wheel one.
 
     """
-    q4_front_wheel = atan(sin(q4) * cos(q3) / (cos(q2) * cos(q4) - 
+    q4_front_wheel = arctan(sin(q4) * cos(q3) / (cos(q2) * cos(q4) - 
                     sin(q2) * sin(q4) * sin(q3)))
 
     q1_front_wheel = q1 + q4_front_wheel
 
     return q4_front_wheel, q1_front_wheel
+
+def contact_force_rear_longitudinal_N1_nonslip(lam, mooreParameters, taskSignals):
+
+    """Return longitudinal contact force of rear wheel under the constraint condition.
+
+    Note
+    ----
+    The contact force direction in this case is expressed by inertial frame, N['1'].
+
+    MooreParameters : dictionary
+        A dictionary of bicycle parameters with a rider in MOORE' set, not
+        Benchmark's set.
+    stateSignals : dictionary
+        A dictionary of various states signals.
+
+    Returns
+    -------
+    Fx_r_ns : float
+        The rear wheel longitudinal contact force along N['1'] direction 
+        under the constraint condition.
+
+    """
+
+    mp = mooreParameters
+    ts = taskSignals
+
+    rR = mp['rr']; l1 = mp['l1']; l2 = mp['l2'];  mc = mp['mc'];  md = mp['md']
+
+    q1 = ts['YawAngle']; q2 = ts['RollAngle']; q3 = lam
+
+    u1 = ts['YawRate'];  u2 = ts['RollRate']; u3 = ts['PitchRate']
+    u5 = ts['RearWheelRate']
+
+    u1d = ts['YawAcc']; u2d = ts['RollAcc']; u3d = ts['PitchAcc']
+    u5d = ts['RearWheelAcc']
+
+    Fx_r_ns = mc*rR*((u1*sin(q2) + u3 + u5)*u1*sin(q2) + u2**2)*sin(q1)*sin(q2) + \
+        mc*rR*((u1*sin(q2) + u3 + u5)*u1*cos(q2) - u2d)*sin(q1)*cos(q2) - \
+        mc*rR*(2.0*u1*u2*cos(q2) + sin(q2)*u1d + u3d + u5d)*cos(q1) + \
+        mc*(sin(q1)*sin(q2)*sin(q3) - cos(q1)*cos(q3))*(l1*(u1*sin(q2) + \
+        u3)**2 - l2*(u1*u2*cos(q2) + sin(q2)*u1d + u3d) + \
+        (l1*(u1*cos(q2)*cos(q3) + u2*sin(q3)) + l2*(u1*sin(q3)*cos(q2) - \
+        u2*cos(q3)))*(u1*cos(q2)*cos(q3) + u2*sin(q3))) - \
+        mc*(sin(q1)*sin(q2)*cos(q3) + sin(q3)*cos(q1))*(l1*(u1*u2*cos(q2) \
+        + sin(q2)*u1d + u3d) + l2*(u1*sin(q2) + u3)**2 + \
+        (l1*(u1*cos(q2)*cos(q3) + u2*sin(q3)) + l2*(u1*sin(q3)*cos(q2) - \
+        u2*cos(q3)))*(u1*sin(q3)*cos(q2) - u2*cos(q3))) - \
+        mc*(-l1*(u1*sin(q2) + u3)*(u1*sin(q3)*cos(q2) - u2*cos(q3)) + \
+        l1*(-u1*u2*sin(q2)*cos(q3) - u1*u3*sin(q3)*cos(q2) + \
+        u2*u3*cos(q3) + sin(q3)*u2d + cos(q2)*cos(q3)*u1d) + \
+        l2*(u1*sin(q2) + u3)*(u1*cos(q2)*cos(q3) + u2*sin(q3)) + \
+        l2*(-u1*u2*sin(q2)*sin(q3) + u1*u3*cos(q2)*cos(q3) + \
+        u2*u3*sin(q3) + sin(q3)*cos(q2)*u1d - \
+        cos(q3)*u2d))*sin(q1)*cos(q2) + md*rR*((u1*sin(q2) + u3 + \
+        u5)*u1*sin(q2) + u2**2)*sin(q1)*sin(q2) + md*rR*((u1*sin(q2) + u3 \
+        + u5)*u1*cos(q2) - u2d)*sin(q1)*cos(q2) - md*rR*(2.0*u1*u2*cos(q2) +\
+        sin(q2)*u1d + u3d + u5d)*cos(q1)
+
+    return Fx_r_ns
 
 
 def meijaard_figure_four(time, rollRate, steerRate, speed):
@@ -732,7 +791,7 @@ def lambda_from_abc(rF, rR, a, b, c):
     def lam_equality(lam, rF, rR, a, b, c):
         return sin(lam) - (rF - rR + c * cos(lam)) / (a + b)
 
-    guess = atan(c / (a + b)) # guess based on equal wheel radii
+    guess = arctan(c / (a + b)) # guess based on equal wheel radii
 
     args = (rF, rR, a, b, c)
 
