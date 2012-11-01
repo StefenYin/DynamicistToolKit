@@ -350,7 +350,7 @@ def contact_force_rear_longitudinal_N1_nonslip(lam, mooreParameters, taskSignals
     u1d = ts['YawAcc']; u2d = ts['RollAcc']; u3d = ts['PitchAcc']
     u5d = ts['RearWheelAcc']
 
-    Fx_r_ns = mc*rR*((u1*sin(q2) + u3 + u5)*u1*sin(q2) + u2**2)*sin(q1)*sin(q2) + \
+    Fx_r_ns_N1 = mc*rR*((u1*sin(q2) + u3 + u5)*u1*sin(q2) + u2**2)*sin(q1)*sin(q2) + \
         mc*rR*((u1*sin(q2) + u3 + u5)*u1*cos(q2) - u2d)*sin(q1)*cos(q2) - \
         mc*rR*(2.0*u1*u2*cos(q2) + sin(q2)*u1d + u3d + u5d)*cos(q1) + \
         mc*(sin(q1)*sin(q2)*sin(q3) - cos(q1)*cos(q3))*(l1*(u1*sin(q2) + \
@@ -372,7 +372,7 @@ def contact_force_rear_longitudinal_N1_nonslip(lam, mooreParameters, taskSignals
         + u5)*u1*cos(q2) - u2d)*sin(q1)*cos(q2) - md*rR*(2.0*u1*u2*cos(q2) +\
         sin(q2)*u1d + u3d + u5d)*cos(q1)
 
-    return Fx_r_ns
+    return Fx_r_ns_N1
 
 def contact_force_rear_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
 
@@ -411,7 +411,7 @@ def contact_force_rear_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
     u1d = ts['YawAcc']; u2d = ts['RollAcc']; u3d = ts['PitchAcc']
     u5d = ts['RearWheelAcc']
 
-    Fy_r_ns = -mc*rR*((u1*sin(q2) + u3 + u5)*u1*sin(q2) + u2**2)*sin(q2)*cos(q1) - \
+    Fy_r_ns_N2 = -mc*rR*((u1*sin(q2) + u3 + u5)*u1*sin(q2) + u2**2)*sin(q2)*cos(q1) - \
         mc*rR*((u1*sin(q2) + u3 + u5)*u1*cos(q2) - u2d)*cos(q1)*cos(q2) - \
         mc*rR*(2.0*u1*u2*cos(q2) + sin(q2)*u1d + u3d + u5d)*sin(q1) - \
         mc*(sin(q1)*sin(q3) - sin(q2)*cos(q1)*cos(q3))*(l1*(u1*u2*cos(q2) \
@@ -433,7 +433,7 @@ def contact_force_rear_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
         + u5)*u1*cos(q2) - u2d)*cos(q1)*cos(q2) - \
         md*rR*(2.0*u1*u2*cos(q2) + sin(q2)*u1d + u3d + u5d)*sin(q1)
 
-    return Fy_r_ns
+    return Fy_r_ns_N2
 
 def contact_force_front_longitudinal_N1_nonslip(lam, mooreParameters, taskSignals):
 
@@ -472,7 +472,7 @@ def contact_force_front_longitudinal_N1_nonslip(lam, mooreParameters, taskSignal
     u1d = ts['YawAcc']; u2d = ts['RollAcc']; u3d = ts['PitchAcc']
     u4d = ts['SteerAcc']; u6d = ts['FrontWheelAcc']
 
-    Fx_f_ns = -me*((sin(q1)*sin(q2)*sin(q3) - cos(q1)*cos(q3))*sin(q4) - \
+    Fx_f_ns_N1 = -me*((sin(q1)*sin(q2)*sin(q3) - cos(q1)*cos(q3))*sin(q4) - \
         sin(q1)*cos(q2)*cos(q4))*(-l3*((sin(q2)*sin(q4) - \
         sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) + \
         u3*sin(q4))*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 - \
@@ -759,7 +759,7 @@ def contact_force_front_longitudinal_N1_nonslip(lam, mooreParameters, taskSignal
         u3*sin(q4))*cos(q2)*cos(q3))*((sin(q2)*sin(q4) - \
         sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) + u3*sin(q4)))
 
-    return Fx_f_ns
+    return Fx_f_ns_N1
 
 def contact_force_front_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
 
@@ -798,7 +798,7 @@ def contact_force_front_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
     u1d = ts['YawAcc']; u2d = ts['RollAcc']; u3d = ts['PitchAcc']
     u4d = ts['SteerAcc']; u6d = ts['FrontWheelAcc']
 
-    Fy_f_ns = me*((sin(q1)*cos(q3) + sin(q2)*sin(q3)*cos(q1))*sin(q4) - \
+    Fy_f_ns_N2 = me*((sin(q1)*cos(q3) + sin(q2)*sin(q3)*cos(q1))*sin(q4) - \
         cos(q1)*cos(q2)*cos(q4))*(-l3*((sin(q2)*sin(q4) - \
         sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) + \
         u3*sin(q4))*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 - \
@@ -1085,7 +1085,339 @@ def contact_force_front_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
         u3*sin(q4))*cos(q2)*cos(q3))*((sin(q2)*sin(q4) - \
         sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) + u3*sin(q4)))
 
-    return Fy_f_ns
+    return Fy_f_ns_N2
+
+def contact_force_nonslip(lam, mooreParameters, taskSignals):
+
+    f0 = np.vectorize(contact_force_rear_longitudinal_N1_nonslip)
+    Fx_r_ns_N1 = f0(lam, mooreParameters, taskSignals)
+
+    f1 = np.vectorize(contact_force_rear_lateral_N2_nonslip)
+    Fy_r_ns_N2 = f1(lam, mooreParameters, taskSignals)
+
+    f2 = np.vectorize(contact_force_front_longitudinal_N1_nonslip)
+    Fx_f_ns_N1 = f2(lam, mooreParameters, taskSignals)
+
+    f3 = np.vectorize(contact_force_front_lateral_N2_nonslip)
+    Fy_f_ns_N2 = f3(lam, mooreParameters, taskSignals)
+
+    yawAngle = taskSignals['YawAngle']
+    frontWheelYawAngle = taskSignals['FrontWheelYawAngle']
+
+    Fx_r_ns = cos(yawAngle) * Fx_r_ns_N1 + sin(yawAngle) * Fy_r_ns_N2
+    Fy_r_ns = -sin(yawAngle) * Fx_r_ns_N1 + cos(yawAngle) * Fy_r_ns_N2 
+    Fx_f_ns = cos(frontWheelYawAngle) * Fx_f_ns_N1 + sin(frontWheelYawAngle) * Fy_f_ns_N2
+    Fy_f_ns = -sin(frontWheelYawAngle) * Fx_f_ns_N1 + cos(frontWheelYawAngle) * Fy_f_ns_N2
+
+    return Fx_r_ns, Fy_r_ns, Fx_f_ns, Fy_f_ns
+
+def contact_points_acceleration(lam, xt,zt, mooreParameters, taskSignals):
+
+    """Returns the contact points acceleration for each wheel, with 
+    respect to the inertial frame N, expressed by the inertial frame N.
+
+    Paramters
+    ---------
+
+    lam : float
+        The tilt angle.
+    xt : float
+        The position of total mass center expressed by B frame 
+        coordinates, B['1'].
+    zt : float
+        The position of total mass center expressed by B frame 
+        coordinates, B['2'].
+    mooreParameters : dictionary
+        A dictionary of bicycle parameters with a rider in MOORE' set, not
+        Benchmark's set.
+    taskSignals : dictionary
+        A dictionary of various states signals, including the acceleration of
+        total mass center in body-fixed coordinates A.
+
+    Returns
+    -------
+    u7d : float
+        Rear wheel contact point acceleration in N['1'].
+    u8d : float
+        Rear wheel contact point acceleration in N['2'].
+    u9d : float
+        Front wheel contact point acceleration in N['1'].
+    u10d : float
+        Front wheel contact point acceleration in N['2'].
+    """
+
+    mp = mooreParameters
+    ts = taskSignals
+
+    rf = mp['rf']; rr = mp['rr']; d1 = mp['d1']; d2 = mp['d2'];  d3 = mp['d3']
+
+    q1 = ts['YawAngle']; q2 = ts['RollAngle']; q3 = lam; q4 = ts['SteerAngle']
+
+    u1 = ts['YawRate'];  u2 = ts['RollRate']; u3 = ts['PitchRate']
+    u4 = ts['SteerRate']; u5 = ts['RearWheelRate']; u6 = ts['FrontWheelRate']
+
+    u1d = ts['YawAcc']; u2d = ts['RollAcc']; u3d = ts['PitchAcc']
+    u4d = ts['SteerAcc']; u5d = ts['RearWheelAcc']; u6d = ts['FrontWheelAcc']
+
+    at1 = ts['FrameAccLong']; at2 = ts['FrameAccLat']
+
+    u7d_N1 = (-rr*(u1*sin(q2) + u3 + u5)**2 - rr*u2**2 + xt*(u1*u2*cos(q2) +\
+        sin(q2)*u1d + u3d) - (-rr - zt)*(u1*sin(q2) + u3)**2 +\
+        (-xt*u1*cos(q2) - (-rr - zt)*u2)*u2)*sin(q1)*sin(q2) +\
+        (rr*(u1*u2*cos(q2) + sin(q2)*u1d + u3d + u5d) + rr*u1*u2*cos(q2)\
+        + xt*(u1*sin(q2) + u3)**2 + (-rr - zt)*(u1*u2*cos(q2) +\
+        sin(q2)*u1d + u3d) - (-xt*u1*cos(q2) - (-rr -\
+        zt)*u2)*u1*cos(q2))*cos(q1) - (rr*(u1*sin(q2) + u3 +\
+        u5)*u1*cos(q2) - rr*((-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3))*u5*sin(q3) - (u1*cos(q2)*cos(q3) +\
+        u2*sin(q3))*u5*cos(q3) - u1*u3*cos(q2) + u2d) - xt*(u1*sin(q2) +\
+        u3)*u2 - xt*(-u1*u2*sin(q2) + u2*u3 + cos(q2)*u1d) + (-rr -\
+        zt)*(u1*sin(q2) + u3)*u1*cos(q2) - (-rr - zt)*(-u1*u3*cos(q2) +\
+        u2d))*sin(q1)*cos(q2) + at1*cos(q1) - at2*sin(q1)
+
+    u8d_N2 = -(-rr*(u1*sin(q2) + u3 + u5)**2 - rr*u2**2 + xt*(u1*u2*cos(q2) +\
+        sin(q2)*u1d + u3d) - (-rr - zt)*(u1*sin(q2) + u3)**2 +\
+        (-xt*u1*cos(q2) - (-rr - zt)*u2)*u2)*sin(q2)*cos(q1) +\
+        (rr*(u1*u2*cos(q2) + sin(q2)*u1d + u3d + u5d) + rr*u1*u2*cos(q2)\
+        + xt*(u1*sin(q2) + u3)**2 + (-rr - zt)*(u1*u2*cos(q2) +\
+        sin(q2)*u1d + u3d) - (-xt*u1*cos(q2) - (-rr -\
+        zt)*u2)*u1*cos(q2))*sin(q1) + (rr*(u1*sin(q2) + u3 +\
+        u5)*u1*cos(q2) - rr*((-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3))*u5*sin(q3) - (u1*cos(q2)*cos(q3) +\
+        u2*sin(q3))*u5*cos(q3) - u1*u3*cos(q2) + u2d) - xt*(u1*sin(q2) +\
+        u3)*u2 - xt*(-u1*u2*sin(q2) + u2*u3 + cos(q2)*u1d) + (-rr -\
+        zt)*(u1*sin(q2) + u3)*u1*cos(q2) - (-rr - zt)*(-u1*u3*cos(q2) +\
+        u2d))*cos(q1)*cos(q2) + at1*sin(q1) + at2*cos(q1)
+
+    u9d_N1 = (-(-sin(q1)*sin(q2)*sin(q3) + cos(q1)*cos(q3))*sin(q4) -\
+        sin(q1)*cos(q2)*cos(q4))*(d3*((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) +\
+        u3*sin(q4))*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 -\
+        u2*sin(q4)*cos(q3) + u3*cos(q4)) + d3*(-u1*u2*sin(q2)*cos(q3) -\
+        u1*u3*sin(q3)*cos(q2) + u2*u3*cos(q3) + sin(q3)*u2d +\
+        cos(q2)*cos(q3)*u1d + u4d) + rf*(u1*cos(q2)*cos(q3) + u2*sin(q3)\
+        + u4)*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 -\
+        u2*sin(q4)*cos(q3) + u3*cos(q4) +\
+        u6)*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) -\
+        rf*((u1*sin(q2) + u3)*u4*cos(q4) + (sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))*u1d - (-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3))*u4*sin(q4) + (sin(q2)*sin(q3)*cos(q4) +\
+        sin(q4)*cos(q2))*u1*u2 - (u1*cos(q2)*cos(q3) + u2*sin(q3) +\
+        u4)*u6 - u1*u3*cos(q2)*cos(q3)*cos(q4) - u2*u3*sin(q3)*cos(q4) +\
+        sin(q4)*u3d +\
+        cos(q3)*cos(q4)*u2d)*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) + (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) +\
+        u3*sin(q4))*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 -\
+        u2*sin(q4)*cos(q3) + u3*cos(q4) + u6) + (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*(((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) + u3*sin(q4))*u6\
+        - u1*u2*sin(q2)*cos(q3) - u1*u3*sin(q3)*cos(q2) + u2*u3*cos(q3) +\
+        sin(q3)*u2d + cos(q2)*cos(q3)*u1d + u4d)) +\
+        ((-sin(q1)*sin(q2)*sin(q3) + cos(q1)*cos(q3))*cos(q4) -\
+        sin(q1)*sin(q4)*cos(q2))*(-d3*((sin(q2)*cos(q4) +\
+        sin(q3)*sin(q4)*cos(q2))*u1 - u2*sin(q4)*cos(q3) + u3*cos(q4))**2\
+        - d3*(u1*cos(q2)*cos(q3) + u2*sin(q3) + u4)**2 + rf*(-(u1*sin(q2)\
+        + u3)*u4*sin(q4) + (sin(q2)*cos(q4) +\
+        sin(q3)*sin(q4)*cos(q2))*u1d - (-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3))*u4*cos(q4) + (-sin(q2)*sin(q3)*sin(q4) +\
+        cos(q2)*cos(q4))*u1*u2 + u1*u3*sin(q4)*cos(q2)*cos(q3) +\
+        u2*u3*sin(q3)*sin(q4) - sin(q4)*cos(q3)*u2d + cos(q4)*u3d +\
+        u6d)*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) - (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*((sin(q2)*cos(q4) +\
+        sin(q3)*sin(q4)*cos(q2))*u1 - u2*sin(q4)*cos(q3) + u3*cos(q4) +\
+        u6)**2 - (-rf*((sin(q2)*sin(q4) - sin(q3)*cos(q2)*cos(q4))*u1 +\
+        u2*cos(q3)*cos(q4) +\
+        u3*sin(q4))*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) + (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*(u1*cos(q2)*cos(q3) + u2*sin(q3) +\
+        u4))*(u1*cos(q2)*cos(q3) + u2*sin(q3) + u4)) +\
+        (-sin(q1)*sin(q2)*sin(q3) + cos(q1)*cos(q3))*(-d1*(u1*sin(q2) +\
+        u3)**2 + d2*(u1*u2*cos(q2) + sin(q2)*u1d + u3d) -\
+        (d1*(u1*cos(q2)*cos(q3) + u2*sin(q3)) - d2*(-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3)))*(u1*cos(q2)*cos(q3) + u2*sin(q3))) +\
+        (sin(q1)*sin(q2)*cos(q3) + sin(q3)*cos(q1))*(-d1*(u1*u2*cos(q2) +\
+        sin(q2)*u1d + u3d) - d2*(u1*sin(q2) + u3)**2 +\
+        (d1*(u1*cos(q2)*cos(q3) + u2*sin(q3)) - d2*(-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3)))*(-u1*sin(q3)*cos(q2) + u2*cos(q3))) +\
+        (sin(q1)*sin(q2)*cos(q3) + sin(q3)*cos(q1))*(d3*((sin(q2)*sin(q4)\
+        - sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) +\
+        u3*sin(q4))*(u1*cos(q2)*cos(q3) + u2*sin(q3) + u4) -\
+        d3*(-(u1*sin(q2) + u3)*u4*sin(q4) + (sin(q2)*cos(q4) +\
+        sin(q3)*sin(q4)*cos(q2))*u1d - (-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3))*u4*cos(q4) + (-sin(q2)*sin(q3)*sin(q4) +\
+        cos(q2)*cos(q4))*u1*u2 + u1*u3*sin(q4)*cos(q2)*cos(q3) +\
+        u2*u3*sin(q3)*sin(q4) - sin(q4)*cos(q3)*u2d + cos(q4)*u3d) -\
+        rf*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 -\
+        u2*sin(q4)*cos(q3) + u3*cos(q4) +\
+        u6)**2*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) - (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*(-(u1*sin(q2) + u3)*u4*sin(q4) +\
+        (sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1d -\
+        (-u1*sin(q3)*cos(q2) + u2*cos(q3))*u4*cos(q4) +\
+        (-sin(q2)*sin(q3)*sin(q4) + cos(q2)*cos(q4))*u1*u2 +\
+        u1*u3*sin(q4)*cos(q2)*cos(q3) + u2*u3*sin(q3)*sin(q4) -\
+        sin(q4)*cos(q3)*u2d + cos(q4)*u3d + u6d) + (-rf*((sin(q2)*sin(q4)\
+        - sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) +\
+        u3*sin(q4))*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) + (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*(u1*cos(q2)*cos(q3) + u2*sin(q3) +\
+        u4))*((sin(q2)*sin(q4) - sin(q3)*cos(q2)*cos(q4))*u1 +\
+        u2*cos(q3)*cos(q4) + u3*sin(q4))) + (xt*(u1*sin(q2) + u3)**2 +\
+        (-rr - zt)*(u1*u2*cos(q2) + sin(q2)*u1d + u3d) - (-xt*u1*cos(q2)\
+        - (-rr - zt)*u2)*u1*cos(q2))*cos(q1) + (xt*(u1*u2*cos(q2) +\
+        sin(q2)*u1d + u3d) - (-rr - zt)*(u1*sin(q2) + u3)**2 +\
+        (-xt*u1*cos(q2) - (-rr - zt)*u2)*u2)*sin(q1)*sin(q2) -\
+        (d1*(u1*sin(q2) + u3)*(-u1*sin(q3)*cos(q2) + u2*cos(q3)) +\
+        d1*(-u1*u2*sin(q2)*cos(q3) - u1*u3*sin(q3)*cos(q2) +\
+        u2*u3*cos(q3) + sin(q3)*u2d + cos(q2)*cos(q3)*u1d) +\
+        d2*(u1*sin(q2) + u3)*(u1*cos(q2)*cos(q3) + u2*sin(q3)) -\
+        d2*(u1*u2*sin(q2)*sin(q3) - u1*u3*cos(q2)*cos(q3) - u2*u3*sin(q3)\
+        - sin(q3)*cos(q2)*u1d + cos(q3)*u2d))*sin(q1)*cos(q2) -\
+        (-xt*(u1*sin(q2) + u3)*u2 - xt*(-u1*u2*sin(q2) + u2*u3 +\
+        cos(q2)*u1d) + (-rr - zt)*(u1*sin(q2) + u3)*u1*cos(q2) - (-rr -\
+        zt)*(-u1*u3*cos(q2) + u2d))*sin(q1)*cos(q2) + at1*cos(q1) -\
+        at2*sin(q1)
+
+    u10d_N2 = (-(sin(q1)*cos(q3) + sin(q2)*sin(q3)*cos(q1))*sin(q4) +\
+        cos(q1)*cos(q2)*cos(q4))*(d3*((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) +\
+        u3*sin(q4))*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 -\
+        u2*sin(q4)*cos(q3) + u3*cos(q4)) + d3*(-u1*u2*sin(q2)*cos(q3) -\
+        u1*u3*sin(q3)*cos(q2) + u2*u3*cos(q3) + sin(q3)*u2d +\
+        cos(q2)*cos(q3)*u1d + u4d) + rf*(u1*cos(q2)*cos(q3) + u2*sin(q3)\
+        + u4)*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 -\
+        u2*sin(q4)*cos(q3) + u3*cos(q4) +\
+        u6)*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) -\
+        rf*((u1*sin(q2) + u3)*u4*cos(q4) + (sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))*u1d - (-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3))*u4*sin(q4) + (sin(q2)*sin(q3)*cos(q4) +\
+        sin(q4)*cos(q2))*u1*u2 - (u1*cos(q2)*cos(q3) + u2*sin(q3) +\
+        u4)*u6 - u1*u3*cos(q2)*cos(q3)*cos(q4) - u2*u3*sin(q3)*cos(q4) +\
+        sin(q4)*u3d +\
+        cos(q3)*cos(q4)*u2d)*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) + (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) +\
+        u3*sin(q4))*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 -\
+        u2*sin(q4)*cos(q3) + u3*cos(q4) + u6) + (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*(((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) + u3*sin(q4))*u6\
+        - u1*u2*sin(q2)*cos(q3) - u1*u3*sin(q3)*cos(q2) + u2*u3*cos(q3) +\
+        sin(q3)*u2d + cos(q2)*cos(q3)*u1d + u4d)) + ((sin(q1)*cos(q3) +\
+        sin(q2)*sin(q3)*cos(q1))*cos(q4) +\
+        sin(q4)*cos(q1)*cos(q2))*(-d3*((sin(q2)*cos(q4) +\
+        sin(q3)*sin(q4)*cos(q2))*u1 - u2*sin(q4)*cos(q3) + u3*cos(q4))**2\
+        - d3*(u1*cos(q2)*cos(q3) + u2*sin(q3) + u4)**2 + rf*(-(u1*sin(q2)\
+        + u3)*u4*sin(q4) + (sin(q2)*cos(q4) +\
+        sin(q3)*sin(q4)*cos(q2))*u1d - (-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3))*u4*cos(q4) + (-sin(q2)*sin(q3)*sin(q4) +\
+        cos(q2)*cos(q4))*u1*u2 + u1*u3*sin(q4)*cos(q2)*cos(q3) +\
+        u2*u3*sin(q3)*sin(q4) - sin(q4)*cos(q3)*u2d + cos(q4)*u3d +\
+        u6d)*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) - (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*((sin(q2)*cos(q4) +\
+        sin(q3)*sin(q4)*cos(q2))*u1 - u2*sin(q4)*cos(q3) + u3*cos(q4) +\
+        u6)**2 - (-rf*((sin(q2)*sin(q4) - sin(q3)*cos(q2)*cos(q4))*u1 +\
+        u2*cos(q3)*cos(q4) +\
+        u3*sin(q4))*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) + (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*(u1*cos(q2)*cos(q3) + u2*sin(q3) +\
+        u4))*(u1*cos(q2)*cos(q3) + u2*sin(q3) + u4)) + (sin(q1)*sin(q3) -\
+        sin(q2)*cos(q1)*cos(q3))*(-d1*(u1*u2*cos(q2) + sin(q2)*u1d + u3d)\
+        - d2*(u1*sin(q2) + u3)**2 + (d1*(u1*cos(q2)*cos(q3) + u2*sin(q3))\
+        - d2*(-u1*sin(q3)*cos(q2) + u2*cos(q3)))*(-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3))) + (sin(q1)*sin(q3) -\
+        sin(q2)*cos(q1)*cos(q3))*(d3*((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) +\
+        u3*sin(q4))*(u1*cos(q2)*cos(q3) + u2*sin(q3) + u4) -\
+        d3*(-(u1*sin(q2) + u3)*u4*sin(q4) + (sin(q2)*cos(q4) +\
+        sin(q3)*sin(q4)*cos(q2))*u1d - (-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3))*u4*cos(q4) + (-sin(q2)*sin(q3)*sin(q4) +\
+        cos(q2)*cos(q4))*u1*u2 + u1*u3*sin(q4)*cos(q2)*cos(q3) +\
+        u2*u3*sin(q3)*sin(q4) - sin(q4)*cos(q3)*u2d + cos(q4)*u3d) -\
+        rf*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 -\
+        u2*sin(q4)*cos(q3) + u3*cos(q4) +\
+        u6)**2*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) - (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*(-(u1*sin(q2) + u3)*u4*sin(q4) +\
+        (sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1d -\
+        (-u1*sin(q3)*cos(q2) + u2*cos(q3))*u4*cos(q4) +\
+        (-sin(q2)*sin(q3)*sin(q4) + cos(q2)*cos(q4))*u1*u2 +\
+        u1*u3*sin(q4)*cos(q2)*cos(q3) + u2*u3*sin(q3)*sin(q4) -\
+        sin(q4)*cos(q3)*u2d + cos(q4)*u3d + u6d) + (-rf*((sin(q2)*sin(q4)\
+        - sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) +\
+        u3*sin(q4))*cos(q2)*cos(q3)/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 + cos(q2)**2*cos(q3)**2) + (-d3 +\
+        rf*(sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))/sqrt((sin(q2)*sin(q4) -\
+        sin(q3)*cos(q2)*cos(q4))**2 +\
+        cos(q2)**2*cos(q3)**2))*(u1*cos(q2)*cos(q3) + u2*sin(q3) +\
+        u4))*((sin(q2)*sin(q4) - sin(q3)*cos(q2)*cos(q4))*u1 +\
+        u2*cos(q3)*cos(q4) + u3*sin(q4))) + (sin(q1)*cos(q3) +\
+        sin(q2)*sin(q3)*cos(q1))*(-d1*(u1*sin(q2) + u3)**2 +\
+        d2*(u1*u2*cos(q2) + sin(q2)*u1d + u3d) - (d1*(u1*cos(q2)*cos(q3)\
+        + u2*sin(q3)) - d2*(-u1*sin(q3)*cos(q2) +\
+        u2*cos(q3)))*(u1*cos(q2)*cos(q3) + u2*sin(q3))) + (xt*(u1*sin(q2)\
+        + u3)**2 + (-rr - zt)*(u1*u2*cos(q2) + sin(q2)*u1d + u3d) -\
+        (-xt*u1*cos(q2) - (-rr - zt)*u2)*u1*cos(q2))*sin(q1) -\
+        (xt*(u1*u2*cos(q2) + sin(q2)*u1d + u3d) - (-rr - zt)*(u1*sin(q2)\
+        + u3)**2 + (-xt*u1*cos(q2) - (-rr - zt)*u2)*u2)*sin(q2)*cos(q1) +\
+        (d1*(u1*sin(q2) + u3)*(-u1*sin(q3)*cos(q2) + u2*cos(q3)) +\
+        d1*(-u1*u2*sin(q2)*cos(q3) - u1*u3*sin(q3)*cos(q2) +\
+        u2*u3*cos(q3) + sin(q3)*u2d + cos(q2)*cos(q3)*u1d) +\
+        d2*(u1*sin(q2) + u3)*(u1*cos(q2)*cos(q3) + u2*sin(q3)) -\
+        d2*(u1*u2*sin(q2)*sin(q3) - u1*u3*cos(q2)*cos(q3) - u2*u3*sin(q3)\
+        - sin(q3)*cos(q2)*u1d + cos(q3)*u2d))*cos(q1)*cos(q2) +\
+        (-xt*(u1*sin(q2) + u3)*u2 - xt*(-u1*u2*sin(q2) + u2*u3 +\
+        cos(q2)*u1d) + (-rr - zt)*(u1*sin(q2) + u3)*u1*cos(q2) - (-rr -\
+        zt)*(-u1*u3*cos(q2) + u2d))*cos(q1)*cos(q2) + at1*sin(q1) +\
+        at2*cos(q1)
+
+    yawAngle = q1
+    frontWheelYawAngle = ts['FrontWheelYawAngle']
+
+    u8d = -sin(yawAngle) * u7d_N1 + cos(yawAngle) * u8d_N2 
+    u10d = -sin(frontWheelYawAngle) * u9d_N1 + cos(frontWheelYawAngle) * u10d_N2
+
+    return u8d, u10d
 
 def meijaard_figure_four(time, rollRate, steerRate, speed):
     width = 4.0 # inches
