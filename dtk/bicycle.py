@@ -323,10 +323,10 @@ def contact_force_rear_longitudinal_N1_nonslip(lam, mooreParameters, taskSignals
 
     lam : float
         The tilt angle.
-    MooreParameters : dictionary
+    mooreParameters : dictionary
         A dictionary of bicycle parameters with a rider in MOORE' set, not
         Benchmark's set.
-    stateSignals : dictionary
+    taskSignals : dictionary
         A dictionary of various states signals.
 
     Returns
@@ -384,10 +384,10 @@ def contact_force_rear_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
 
     lam : float
         The tilt angle.
-    MooreParameters : dictionary
+    mooreParameters : dictionary
         A dictionary of bicycle parameters with a rider in MOORE' set, not
         Benchmark's set.
-    stateSignals : dictionary
+    taskSignals : dictionary
         A dictionary of various states signals.
 
     Returns
@@ -445,10 +445,10 @@ def contact_force_front_longitudinal_N1_nonslip(lam, mooreParameters, taskSignal
 
     lam : float
         The tilt angle.
-    MooreParameters : dictionary
+    mooreParameters : dictionary
         A dictionary of bicycle parameters with a rider in MOORE' set, not
         Benchmark's set.
-    stateSignals : dictionary
+    taskSignals : dictionary
         A dictionary of various states signals.
 
     Returns
@@ -771,10 +771,10 @@ def contact_force_front_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
 
     lam : float
         The tilt angle.
-    MooreParameters : dictionary
+    mooreParameters : dictionary
         A dictionary of bicycle parameters with a rider in MOORE' set, not
         Benchmark's set.
-    stateSignals : dictionary
+    taskSignals : dictionary
         A dictionary of various states signals.
 
     Returns
