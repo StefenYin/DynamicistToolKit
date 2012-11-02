@@ -312,7 +312,7 @@ def front_wheel_steer_yaw_angle(q1, q2, q3, q4):
 
     return q4_front_wheel, q1_front_wheel
 
-def contact_points_acceleration(lam, xt,zt, mooreParameters, taskSignals):
+def contact_points_acceleration_N(lam, xt,zt, mooreParameters, taskSignals):
 
     """Returns the contact points acceleration for each wheel, with 
     respect to the inertial frame N, expressed by the inertial frame N.
@@ -337,14 +337,14 @@ def contact_points_acceleration(lam, xt,zt, mooreParameters, taskSignals):
 
     Returns
     -------
-    u7d : float
-        Rear wheel contact point acceleration in longitudinal.
-    u8d : float
-        Rear wheel contact point acceleration in lateral.
-    u9d : float
-        Front wheel contact point acceleration in longitudinal.
-    u10d : float
-        Front wheel contact point acceleration in lateral.
+    u7d_N1 : float
+        Rear wheel contact point longitudinal acceleration in N['1'].
+    u8d_N2 : float
+        Rear wheel contact point lateral acceleration in N['2'].
+    u9d_N1 : float
+        Front wheel contact point longitudinal acceleration in N['1'].
+    u10d_N2 : float
+        Front wheel contact point lateral acceleration in N['2'].
     """
 
     mp = mooreParameters
@@ -612,8 +612,49 @@ def contact_points_acceleration(lam, xt,zt, mooreParameters, taskSignals):
         zt)*(-u1*u3*cos(q2) + u2d))*cos(q1)*cos(q2) + at1*sin(q1) +\
         at2*cos(q1)
 
-    yawAngle = q1
-    frontWheelYawAngle = ts['FrontWheelYawAngle']
+    return u7d_N1, u8d_N2, u9d_N1, u10d_N2
+
+def contact_points_acceleration(lam, xt,zt, mooreParameters, taskSignals):
+
+    """Returns the contact points acceleration for each wheel, with 
+    respect to the inertial frame N, expressed by the individual body-fixed
+    coordinates of each wheel.
+
+    Paramters
+    ---------
+
+    lam : float
+        The tilt angle.
+    xt : float
+        The position of total mass center expressed by B frame 
+        coordinates, B['1'].
+    zt : float
+        The position of total mass center expressed by B frame 
+        coordinates, B['2'].
+    mooreParameters : dictionary
+        A dictionary of bicycle parameters with a rider in MOORE' set, not
+        Benchmark's set.
+    taskSignals : dictionary
+        A dictionary of various states signals, including the acceleration of
+        total mass center in body-fixed coordinates A.
+
+    Returns
+    -------
+    u7d : float
+        Rear wheel contact point acceleration in longitudinal.
+    u8d : float
+        Rear wheel contact point acceleration in lateral.
+    u9d : float
+        Front wheel contact point acceleration in longitudinal.
+    u10d : float
+        Front wheel contact point acceleration in lateral.
+    """
+
+    f = np.vectorize(contact_points_acceleration_N)
+    u7d_N1, u8d_N2, u9d_N1, u10d_N2 = f(lam, xt,zt, mooreParameters, taskSignals)
+
+    yawAngle = taskSignals['YawAngle']
+    frontWheelYawAngle = taskSignals['FrontWheelYawAngle']
 
     u7d = cos(yawAngle) * u7d_N1 + sin(yawAngle) * u8d_N2
     u8d = -sin(yawAngle) * u7d_N1 + cos(yawAngle) * u8d_N2 
