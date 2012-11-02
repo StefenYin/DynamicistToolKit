@@ -2,7 +2,7 @@ from numpy import sin, cos, tan, arctan, pi, sqrt
 import numpy as np
 
 
-def contact_force_rear_longitudinal_N1_nonslip(lam, mooreParameters, taskSignals):
+def contact_force_rear_longitudinal_N1_constraints(lam, mooreParameters, taskSignals):
 
     """Return longitudinal contact force of rear wheel under the constraint condition.
 
@@ -63,7 +63,7 @@ def contact_force_rear_longitudinal_N1_nonslip(lam, mooreParameters, taskSignals
 
     return Fx_r_ns_N1
 
-def contact_force_rear_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
+def contact_force_rear_lateral_N2_constraints(lam, mooreParameters, taskSignals):
 
     """Return lateral contact force of rear wheel under the constraint condition.
 
@@ -124,7 +124,7 @@ def contact_force_rear_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
 
     return Fy_r_ns_N2
 
-def contact_force_front_longitudinal_N1_nonslip(lam, mooreParameters, taskSignals):
+def contact_force_front_longitudinal_N1_constraints(lam, mooreParameters, taskSignals):
 
     """Return longitudinal contact force of front wheel under the constraint condition.
 
@@ -450,7 +450,7 @@ def contact_force_front_longitudinal_N1_nonslip(lam, mooreParameters, taskSignal
 
     return Fx_f_ns_N1
 
-def contact_force_front_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
+def contact_force_front_lateral_N2_constraints(lam, mooreParameters, taskSignals):
 
     """Return lateral contact force of front wheel under the constraint condition.
 
@@ -778,16 +778,16 @@ def contact_force_front_lateral_N2_nonslip(lam, mooreParameters, taskSignals):
 
 def contact_force_nonslip(lam, mooreParameters, taskSignals):
 
-    f0 = np.vectorize(contact_force_rear_longitudinal_N1_nonslip)
+    f0 = np.vectorize(contact_force_rear_longitudinal_N1_constraints)
     Fx_r_ns_N1 = f0(lam, mooreParameters, taskSignals)
 
-    f1 = np.vectorize(contact_force_rear_lateral_N2_nonslip)
+    f1 = np.vectorize(contact_force_rear_lateral_N2_constraints)
     Fy_r_ns_N2 = f1(lam, mooreParameters, taskSignals)
 
-    f2 = np.vectorize(contact_force_front_longitudinal_N1_nonslip)
+    f2 = np.vectorize(contact_force_front_longitudinal_N1_constraints)
     Fx_f_ns_N1 = f2(lam, mooreParameters, taskSignals)
 
-    f3 = np.vectorize(contact_force_front_lateral_N2_nonslip)
+    f3 = np.vectorize(contact_force_front_lateral_N2_constraints)
     Fy_f_ns_N2 = f3(lam, mooreParameters, taskSignals)
 
     yawAngle = taskSignals['YawAngle']
