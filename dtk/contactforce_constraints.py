@@ -1,6 +1,29 @@
 from numpy import sin, cos, tan, arctan, pi, sqrt
 import numpy as np
 
+def contact_force_constraints(lam, mooreParameters, taskSignals):
+
+    f0 = np.vectorize(contact_force_rear_longitudinal_N1_constraints)
+    Fx_r_c_N1 = f0(lam, mooreParameters, taskSignals)
+
+    f1 = np.vectorize(contact_force_rear_lateral_N2_constraints)
+    Fy_r_c_N2 = f1(lam, mooreParameters, taskSignals)
+
+    f2 = np.vectorize(contact_force_front_longitudinal_N1_constraints)
+    Fx_f_c_N1 = f2(lam, mooreParameters, taskSignals)
+
+    f3 = np.vectorize(contact_force_front_lateral_N2_constraints)
+    Fy_f_c_N2 = f3(lam, mooreParameters, taskSignals)
+
+    yawAngle = taskSignals['YawAngle']
+    frontWheelYawAngle = taskSignals['FrontWheelYawAngle']
+
+    Fx_r_c = cos(yawAngle) * Fx_r_c_N1 + sin(yawAngle) * Fy_r_c_N2
+    Fy_r_c = -sin(yawAngle) * Fx_r_c_N1 + cos(yawAngle) * Fy_r_c_N2 
+    Fx_f_c = cos(frontWheelYawAngle) * Fx_f_c_N1 + sin(frontWheelYawAngle) * Fy_f_c_N2
+    Fy_f_c = -sin(frontWheelYawAngle) * Fx_f_c_N1 + cos(frontWheelYawAngle) * Fy_f_c_N2
+
+    return Fx_r_c, Fy_r_c, Fx_f_c, Fy_f_c
 
 def contact_force_rear_longitudinal_N1_constraints(lam, mooreParameters, taskSignals):
 
@@ -20,7 +43,7 @@ def contact_force_rear_longitudinal_N1_constraints(lam, mooreParameters, taskSig
 
     Returns
     -------
-    Fx_r_ns : float
+    Fx_r_c : float
         The rear wheel longitudinal contact force along N['1'] direction 
         under the constraint condition.
 
@@ -39,7 +62,7 @@ def contact_force_rear_longitudinal_N1_constraints(lam, mooreParameters, taskSig
     u1d = ts['YawAcc']; u2d = ts['RollAcc']; u3d = ts['PitchAcc']
     u5d = ts['RearWheelAcc']
 
-    Fx_r_ns_N1 = mc*rR*((u1*sin(q2) + u3 + u5)*u1*sin(q2) + u2**2)*sin(q1)*sin(q2) + \
+    Fx_r_c_N1 = mc*rR*((u1*sin(q2) + u3 + u5)*u1*sin(q2) + u2**2)*sin(q1)*sin(q2) + \
         mc*rR*((u1*sin(q2) + u3 + u5)*u1*cos(q2) - u2d)*sin(q1)*cos(q2) - \
         mc*rR*(2.0*u1*u2*cos(q2) + sin(q2)*u1d + u3d + u5d)*cos(q1) + \
         mc*(sin(q1)*sin(q2)*sin(q3) - cos(q1)*cos(q3))*(l1*(u1*sin(q2) + \
@@ -61,7 +84,7 @@ def contact_force_rear_longitudinal_N1_constraints(lam, mooreParameters, taskSig
         + u5)*u1*cos(q2) - u2d)*sin(q1)*cos(q2) - md*rR*(2.0*u1*u2*cos(q2) +\
         sin(q2)*u1d + u3d + u5d)*cos(q1)
 
-    return Fx_r_ns_N1
+    return Fx_r_c_N1
 
 def contact_force_rear_lateral_N2_constraints(lam, mooreParameters, taskSignals):
 
@@ -81,7 +104,7 @@ def contact_force_rear_lateral_N2_constraints(lam, mooreParameters, taskSignals)
 
     Returns
     -------
-    Fy_r_ns : float
+    Fy_r_c : float
         The rear wheel lateral contact force along N['2'] direction 
         under the constraint condition.
 
@@ -100,7 +123,7 @@ def contact_force_rear_lateral_N2_constraints(lam, mooreParameters, taskSignals)
     u1d = ts['YawAcc']; u2d = ts['RollAcc']; u3d = ts['PitchAcc']
     u5d = ts['RearWheelAcc']
 
-    Fy_r_ns_N2 = -mc*rR*((u1*sin(q2) + u3 + u5)*u1*sin(q2) + u2**2)*sin(q2)*cos(q1) - \
+    Fy_r_c_N2 = -mc*rR*((u1*sin(q2) + u3 + u5)*u1*sin(q2) + u2**2)*sin(q2)*cos(q1) - \
         mc*rR*((u1*sin(q2) + u3 + u5)*u1*cos(q2) - u2d)*cos(q1)*cos(q2) - \
         mc*rR*(2.0*u1*u2*cos(q2) + sin(q2)*u1d + u3d + u5d)*sin(q1) - \
         mc*(sin(q1)*sin(q3) - sin(q2)*cos(q1)*cos(q3))*(l1*(u1*u2*cos(q2) \
@@ -122,7 +145,7 @@ def contact_force_rear_lateral_N2_constraints(lam, mooreParameters, taskSignals)
         + u5)*u1*cos(q2) - u2d)*cos(q1)*cos(q2) - \
         md*rR*(2.0*u1*u2*cos(q2) + sin(q2)*u1d + u3d + u5d)*sin(q1)
 
-    return Fy_r_ns_N2
+    return Fy_r_c_N2
 
 def contact_force_front_longitudinal_N1_constraints(lam, mooreParameters, taskSignals):
 
@@ -142,7 +165,7 @@ def contact_force_front_longitudinal_N1_constraints(lam, mooreParameters, taskSi
 
     Returns
     -------
-    Fx_f_ns : float
+    Fx_f_c : float
         The front wheel longitudinal contact force along N['1'] direction 
         under the constraint condition.
 
@@ -161,7 +184,7 @@ def contact_force_front_longitudinal_N1_constraints(lam, mooreParameters, taskSi
     u1d = ts['YawAcc']; u2d = ts['RollAcc']; u3d = ts['PitchAcc']
     u4d = ts['SteerAcc']; u6d = ts['FrontWheelAcc']
 
-    Fx_f_ns_N1 = -me*((sin(q1)*sin(q2)*sin(q3) - cos(q1)*cos(q3))*sin(q4) - \
+    Fx_f_c_N1 = -me*((sin(q1)*sin(q2)*sin(q3) - cos(q1)*cos(q3))*sin(q4) - \
         sin(q1)*cos(q2)*cos(q4))*(-l3*((sin(q2)*sin(q4) - \
         sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) + \
         u3*sin(q4))*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 - \
@@ -448,7 +471,7 @@ def contact_force_front_longitudinal_N1_constraints(lam, mooreParameters, taskSi
         u3*sin(q4))*cos(q2)*cos(q3))*((sin(q2)*sin(q4) - \
         sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) + u3*sin(q4)))
 
-    return Fx_f_ns_N1
+    return Fx_f_c_N1
 
 def contact_force_front_lateral_N2_constraints(lam, mooreParameters, taskSignals):
 
@@ -468,7 +491,7 @@ def contact_force_front_lateral_N2_constraints(lam, mooreParameters, taskSignals
 
     Returns
     -------
-    Fy_f_ns : float
+    Fy_f_c : float
         The front wheel lateral contact force along N['2'] direction 
         under the constraint condition.
 
@@ -487,7 +510,7 @@ def contact_force_front_lateral_N2_constraints(lam, mooreParameters, taskSignals
     u1d = ts['YawAcc']; u2d = ts['RollAcc']; u3d = ts['PitchAcc']
     u4d = ts['SteerAcc']; u6d = ts['FrontWheelAcc']
 
-    Fy_f_ns_N2 = me*((sin(q1)*cos(q3) + sin(q2)*sin(q3)*cos(q1))*sin(q4) - \
+    Fy_f_c_N2 = me*((sin(q1)*cos(q3) + sin(q2)*sin(q3)*cos(q1))*sin(q4) - \
         cos(q1)*cos(q2)*cos(q4))*(-l3*((sin(q2)*sin(q4) - \
         sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) + \
         u3*sin(q4))*((sin(q2)*cos(q4) + sin(q3)*sin(q4)*cos(q2))*u1 - \
@@ -774,28 +797,4 @@ def contact_force_front_lateral_N2_constraints(lam, mooreParameters, taskSignals
         u3*sin(q4))*cos(q2)*cos(q3))*((sin(q2)*sin(q4) - \
         sin(q3)*cos(q2)*cos(q4))*u1 + u2*cos(q3)*cos(q4) + u3*sin(q4)))
 
-    return Fy_f_ns_N2
-
-def contact_force_constraints(lam, mooreParameters, taskSignals):
-
-    f0 = np.vectorize(contact_force_rear_longitudinal_N1_constraints)
-    Fx_r_ns_N1 = f0(lam, mooreParameters, taskSignals)
-
-    f1 = np.vectorize(contact_force_rear_lateral_N2_constraints)
-    Fy_r_ns_N2 = f1(lam, mooreParameters, taskSignals)
-
-    f2 = np.vectorize(contact_force_front_longitudinal_N1_constraints)
-    Fx_f_ns_N1 = f2(lam, mooreParameters, taskSignals)
-
-    f3 = np.vectorize(contact_force_front_lateral_N2_constraints)
-    Fy_f_ns_N2 = f3(lam, mooreParameters, taskSignals)
-
-    yawAngle = taskSignals['YawAngle']
-    frontWheelYawAngle = taskSignals['FrontWheelYawAngle']
-
-    Fx_r_ns = cos(yawAngle) * Fx_r_ns_N1 + sin(yawAngle) * Fy_r_ns_N2
-    Fy_r_ns = -sin(yawAngle) * Fx_r_ns_N1 + cos(yawAngle) * Fy_r_ns_N2 
-    Fx_f_ns = cos(frontWheelYawAngle) * Fx_f_ns_N1 + sin(frontWheelYawAngle) * Fy_f_ns_N2
-    Fy_f_ns = -sin(frontWheelYawAngle) * Fx_f_ns_N1 + cos(frontWheelYawAngle) * Fy_f_ns_N2
-
-    return Fx_r_ns, Fy_r_ns, Fx_f_ns, Fy_f_ns
+    return Fy_f_c_N2
