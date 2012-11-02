@@ -776,7 +776,7 @@ def contact_force_front_lateral_N2_constraints(lam, mooreParameters, taskSignals
 
     return Fy_f_ns_N2
 
-def contact_force_nonslip(lam, mooreParameters, taskSignals):
+def contact_force_constraints(lam, mooreParameters, taskSignals):
 
     f0 = np.vectorize(contact_force_rear_longitudinal_N1_constraints)
     Fx_r_ns_N1 = f0(lam, mooreParameters, taskSignals)
