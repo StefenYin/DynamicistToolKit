@@ -338,13 +338,13 @@ def contact_points_acceleration(lam, xt,zt, mooreParameters, taskSignals):
     Returns
     -------
     u7d : float
-        Rear wheel contact point acceleration in N['1'].
+        Rear wheel contact point acceleration in longitudinal.
     u8d : float
-        Rear wheel contact point acceleration in N['2'].
+        Rear wheel contact point acceleration in lateral.
     u9d : float
-        Front wheel contact point acceleration in N['1'].
+        Front wheel contact point acceleration in longitudinal.
     u10d : float
-        Front wheel contact point acceleration in N['2'].
+        Front wheel contact point acceleration in lateral.
     """
 
     mp = mooreParameters
@@ -615,10 +615,12 @@ def contact_points_acceleration(lam, xt,zt, mooreParameters, taskSignals):
     yawAngle = q1
     frontWheelYawAngle = ts['FrontWheelYawAngle']
 
+    u7d = cos(yawAngle) * u7d_N1 + sin(yawAngle) * u8d_N2
     u8d = -sin(yawAngle) * u7d_N1 + cos(yawAngle) * u8d_N2 
+    u9d = cos(frontWheelYawAngle) * u9d_N1 + sin(frontWheelYawAngle) * u10d_N2
     u10d = -sin(frontWheelYawAngle) * u9d_N1 + cos(frontWheelYawAngle) * u10d_N2
 
-    return u8d, u10d
+    return u7d, u8d, u9d, u10d
 
 def meijaard_figure_four(time, rollRate, steerRate, speed):
     width = 4.0 # inches
