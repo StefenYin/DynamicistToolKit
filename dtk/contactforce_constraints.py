@@ -3,6 +3,21 @@ import numpy as np
 
 def contact_force_constraints(lam, mooreParameters, taskSignals):
 
+    f = np.vectorize(contact_force_N_constraints)
+    Fx_r_c_N1, Fy_r_c_N2, Fx_f_c_N1, Fy_f_c_N2 = f(lam, mooreParameters, taskSignals)
+
+    yawAngle = taskSignals['YawAngle']
+    frontWheelYawAngle = taskSignals['FrontWheelYawAngle']
+
+    Fx_r_c = cos(yawAngle) * Fx_r_c_N1 + sin(yawAngle) * Fy_r_c_N2
+    Fy_r_c = -sin(yawAngle) * Fx_r_c_N1 + cos(yawAngle) * Fy_r_c_N2 
+    Fx_f_c = cos(frontWheelYawAngle) * Fx_f_c_N1 + sin(frontWheelYawAngle) * Fy_f_c_N2
+    Fy_f_c = -sin(frontWheelYawAngle) * Fx_f_c_N1 + cos(frontWheelYawAngle) * Fy_f_c_N2
+
+    return Fx_r_c, Fy_r_c, Fx_f_c, Fy_f_c
+
+def contact_force_N_constraints(lam, mooreParameters, taskSignals):
+
     f0 = np.vectorize(contact_force_rear_longitudinal_N1_constraints)
     Fx_r_c_N1 = f0(lam, mooreParameters, taskSignals)
 
@@ -15,15 +30,7 @@ def contact_force_constraints(lam, mooreParameters, taskSignals):
     f3 = np.vectorize(contact_force_front_lateral_N2_constraints)
     Fy_f_c_N2 = f3(lam, mooreParameters, taskSignals)
 
-    yawAngle = taskSignals['YawAngle']
-    frontWheelYawAngle = taskSignals['FrontWheelYawAngle']
-
-    Fx_r_c = cos(yawAngle) * Fx_r_c_N1 + sin(yawAngle) * Fy_r_c_N2
-    Fy_r_c = -sin(yawAngle) * Fx_r_c_N1 + cos(yawAngle) * Fy_r_c_N2 
-    Fx_f_c = cos(frontWheelYawAngle) * Fx_f_c_N1 + sin(frontWheelYawAngle) * Fy_f_c_N2
-    Fy_f_c = -sin(frontWheelYawAngle) * Fx_f_c_N1 + cos(frontWheelYawAngle) * Fy_f_c_N2
-
-    return Fx_r_c, Fy_r_c, Fx_f_c, Fy_f_c
+    return Fx_r_c_N1, Fy_r_c_N2, Fx_f_c_N1, Fy_f_c_N2
 
 def contact_force_rear_longitudinal_N1_constraints(lam, mooreParameters, taskSignals):
 
